@@ -55,14 +55,44 @@
         </ul>
     </div>
     <div class="card-body">
-        <div class="card" th:objetc="${ingressante}" id="card1">
-            <div class="card-header text-center" style="background-color: #D3D3D3;">
+        <div class="card"  id="card1">
+            <div th:objetc="${ingressante}" class="card-header text-center" style="background-color: #D3D3D3;">
                 <b th:text="'Informaçoes de Matricula de ' + ${ingressante.nome}"></b>
             </div>
             <div class="card-body">
-                <div class="form-row">
-
-                </div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Curso</th>
+                        <th>Turma</th>
+                        <th>Posição</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <div th:if="${selecao}">
+                        <tr th:each="disputa: ${disputas}">
+                            <td th:text="${disputa.nomeCurso}"></td>
+                            <td th:text="${disputa.idTurma}"></td>
+                            <div th:switch="${disputa.posicao}">
+                                <td th:case="0"> - </td>
+                                <td th:case="*" th:text="${disputa.posicao}"></td>
+                            </div>
+                            <td th:text="${disputa.mensagem}"></td>
+                        </tr>
+                    </div>
+                    <div th:unless="${selecao}">
+                        <tr >
+                            <td> - </td>
+                            <td> - </td>
+                            <td > - </td>
+                            <td> EM BREVE </td>
+                            <td></td>
+                        </tr>
+                    </div>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

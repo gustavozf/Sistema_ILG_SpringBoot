@@ -1,10 +1,7 @@
 package com.silverdev.ilg.controller;
 
 import com.silverdev.ilg.general.IngressoBoleto;
-import com.silverdev.ilg.model.Aluno;
-import com.silverdev.ilg.model.Ingressante;
-import com.silverdev.ilg.model.Turma;
-import com.silverdev.ilg.model.Usuario;
+import com.silverdev.ilg.model.*;
 import com.silverdev.ilg.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,16 +24,22 @@ public class IngressanteController {
     private final UsuarioRepository usuarioRepository;
     private final TurmaRepository turmaRepository;
     private final CursoRepository cursoRepository;
+    private final DisputaRepository disputaRepository;
+    private final InscricaoRepository inscricaoRepository;
 
     @Autowired
     public IngressanteController(IngressanteRepository ingressanteRepository,
                                  UsuarioRepository usuarioRepository,
                                  TurmaRepository turmaRepository,
-                                 CursoRepository cursoRepository){
+                                 CursoRepository cursoRepository,
+                                 DisputaRepository disputaRepository,
+                                 InscricaoRepository inscricaoRepository){
         this.ingressanteRepository = ingressanteRepository;
         this.usuarioRepository = usuarioRepository;
         this.turmaRepository = turmaRepository;
         this.cursoRepository = cursoRepository;
+        this.disputaRepository = disputaRepository;
+        this.inscricaoRepository = inscricaoRepository;
     }
 
     @GetMapping
@@ -56,7 +59,19 @@ public class IngressanteController {
 
     @GetMapping("matricula/{id}")
     public String infoMatricula(@PathVariable("id") Integer id, Model model){
-        model.addAttribute("ingressante", usuarioRepository.getOne(id));
+        Usuario user = usuarioRepository.getOne(id);
+        String cpf = user.getCpf();
+        List<Ingressante> ingressante = ingressanteRepository.findByCpf(cpf);
+        Integer numInscricao = ingressante.get(0).getInscricao();
+        List<Disputa> disputas =  disputaRepository.findAllByCpfIngressanteAndInscricao(cpf, numInscricao);
+        Inscricao inscricao = inscricaoRepository.getOne(numInscricao);
+        boolean selecaoFeita = false;
+
+        if(inscricao.isFeita()) {selecaoFeita = true;}
+
+        model.addAttribute("disputas", disputas);
+        model.addAttribute("ingressante",  ingressante.get(0));
+        model.addAttribute("selecao", selecaoFeita);
 
         return"/ingressante/matricula";
     }

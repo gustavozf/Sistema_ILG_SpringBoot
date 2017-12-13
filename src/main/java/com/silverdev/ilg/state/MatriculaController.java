@@ -27,7 +27,7 @@ public class MatriculaController {
         this.alunoRepository = alunoRepository;
     }
 
-    @GetMapping("/matricula/{id}")
+    @GetMapping("/matricular/{id}")
     public String matricularSe(@PathVariable("id") Integer id){
         matricula = new AlunoState();
 
@@ -37,7 +37,7 @@ public class MatriculaController {
                             alunoRepository
                             );
 
-        return "redirect:/aluno/" + id;
+        return "redirect:/login";
     }
 
     @GetMapping("/desvincular/{id}")
