@@ -70,7 +70,7 @@ public class IngressanteController {
         if(inscricao.isFeita()) {selecaoFeita = true;}
 
         model.addAttribute("disputas", disputas);
-        model.addAttribute("ingressante",  ingressante.get(0));
+        model.addAttribute("ingressante",  user);
         model.addAttribute("selecao", selecaoFeita);
 
         return"/ingressante/matricula";
