@@ -40,7 +40,7 @@ public class AlunoState implements Matricula {
     }
 
     @Override
-    public void desvincular(UsuarioRepository user, Integer id) {
+    public void desvincular(UsuarioRepository user, IngressanteRepository ingressanteRepository, Integer id) {
         System.out.println("Ola");
     }
 }

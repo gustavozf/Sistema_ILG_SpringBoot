@@ -16,4 +16,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
     List<Usuario> findAllByAtivoAndAcesso(boolean ativo, Role acesso);
     Usuario findUsuarioByUsername(String username);
     Usuario findUsuarioById(Integer id);
+    Usuario findUsuarioByCpf(String cpf);
 }

@@ -44,7 +44,7 @@ public class MatriculaController {
     public String desvincularSe(@PathVariable("id") Integer id){
         matricula = new DesistenteState();
 
-        matricula.desvincular(usuarioRepository, id);
+        matricula.desvincular(usuarioRepository, ingressanteRepository, id);
 
         return "redirect:/";
     }
