@@ -20,6 +20,9 @@ public class Inscricao {
     @Column(name = "inscricao_data_fim")
     private String data_fim;
 
+    @Column(name= "inscricao_feita")
+    private boolean feita = false;
+
     public Integer getId() {
         return id;
     }
@@ -66,4 +69,13 @@ public class Inscricao {
     public void setData_fim(String data_fim) {
         this.data_fim = data_fim;
     }
+
+    public boolean isFeita() {
+        return feita;
+    }
+
+    public void setFeita(boolean feita) {
+        this.feita = feita;
+    }
 }
+

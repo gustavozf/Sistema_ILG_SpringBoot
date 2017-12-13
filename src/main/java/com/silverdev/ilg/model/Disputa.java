@@ -43,15 +43,15 @@ public class Disputa {
 
     //Se possui media >= 7.0, pagou o boleto e mandou os documentos
     @Column(name = "disputa_apto")
-    private boolean apto;
+    private boolean apto = false;
 
     //se foi um dos selecionados
     @Column(name = "disputa_aprovado")
-    private boolean aprovado;
+    private boolean aprovado = false;
 
     //se aceitou a vaga
     @Column(name = "disputa_matriculado")
-    private boolean matriculado;
+    private boolean matriculado = false;
 
     public Integer getId() {
         return id;
@@ -69,12 +69,36 @@ public class Disputa {
         this.idIngressante = idIngressante;
     }
 
+    public String getNomeIngressante() {
+        return nomeIngressante;
+    }
+
+    public void setNomeIngressante(String nomeIngressante) {
+        this.nomeIngressante = nomeIngressante;
+    }
+
+    public String getCpfIngressante() {
+        return cpfIngressante;
+    }
+
+    public void setCpfIngressante(String cpfIngressante) {
+        this.cpfIngressante = cpfIngressante;
+    }
+
     public Integer getIdCurso() {
         return idCurso;
     }
 
     public void setIdCurso(Integer idCurso) {
         this.idCurso = idCurso;
+    }
+
+    public String getNomeCurso() {
+        return nomeCurso;
+    }
+
+    public void setNomeCurso(String nomeCurso) {
+        this.nomeCurso = nomeCurso;
     }
 
     public Integer getIdTurma() {
@@ -90,7 +114,7 @@ public class Disputa {
     }
 
     public void setInscricao(Integer inscricao) {
-        inscricao = inscricao;
+        this.inscricao = inscricao;
     }
 
     public Integer getPosicao() {
@@ -139,30 +163,6 @@ public class Disputa {
 
     public void setMatriculado(boolean matriculado) {
         this.matriculado = matriculado;
-    }
-
-    public String getNomeIngressante() {
-        return nomeIngressante;
-    }
-
-    public void setNomeIngressante(String nomeIngressante) {
-        this.nomeIngressante = nomeIngressante;
-    }
-
-    public String getNomeCurso() {
-        return nomeCurso;
-    }
-
-    public void setNomeCurso(String nomeCurso) {
-        this.nomeCurso = nomeCurso;
-    }
-
-    public String getCpfIngressante() {
-        return cpfIngressante;
-    }
-
-    public void setCpfIngressante(String cpfIngressante) {
-        this.cpfIngressante = cpfIngressante;
     }
 
     @Override

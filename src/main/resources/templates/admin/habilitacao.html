@@ -125,9 +125,13 @@
                     </div>
                 </td>
                 <td>
-                    <div class="btn-group" role="group">
-                        <a class="btn btn-primary btn-sm"
-                           th:href="@{/admin/selecao/{id} (id=${inscricao.id})}">Selecionar</a>
+                    <div th:switch="${inscricao.feita}">
+                        <div class="btn-group" role="group">
+                            <a th:case="false" class="btn btn-primary btn-sm"
+                               th:href="@{/admin/selecao/{id} (id=${inscricao.id})}">Selecionar</a>
+                            <a th:case="true" class="btn btn-primary btn-sm disabled"
+                               th:href="@{/admin/selecao/{id} (id=${inscricao.id})}">Selecionar</a>
+                        </div>
                     </div>
                 </td>
                 <td>

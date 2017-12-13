@@ -38,8 +38,13 @@ public class SelecaoController {
 
     @GetMapping("/visualizacao/{id}")
     public String visualizaSelecao(@PathVariable("id") Integer inscricao_id, Model model){
-        model.addAttribute("disputas", disputaRepository
-                .findAllByInscricaoOrderByIdTurmaAscPosicaoAsc(inscricao_id));
+        List<Disputa> alunosGerais = disputaRepository
+                .findAllByInscricaoOrderByNomeIngressante(inscricao_id);
+        List<Disputa> alunosFora = null;
+        List<Disputa> naoAptos = disputaRepository.findByAptoOrderByNomeIngressante(false);
+
+        model.addAttribute("disputas", alunosGerais);
+
 
         return "admin/selecao";
     }
@@ -48,22 +53,37 @@ public class SelecaoController {
     public String realizaSelecao(@PathVariable("id") Integer inscricao_id, RedirectAttributes ra){
         List<Ingressante> ingressantes = ingressanteRepository.findAllByInscricao(inscricao_id);
         List<Disputa> disputas;
-        Integer turma, vagasUem, vagasTotais, vagasFora;
+        Inscricao inscricao = inscricaoRepository.getOne(inscricao_id);
+        Turma turma;
+        Double aux;
+        Integer  turmaId, vagasUem, vagasTotais, vagasFora;
+        boolean erro = false;
 
         //acha os aptos de uma determinada inscricao
         buscaAptos(inscricao_id, ingressantes);
 
-        vagasFora = 0; //vagas dos alunos nao vinculados a uem
-        vagasTotais = 0; //vagas da turma
-        vagasUem = 0; // vagas dos alunos
+
         try {
             disputas = disputaRepository.findAllByInscricaoAndAptoOrderByIdTurmaAscMediaDesc(inscricao_id, true);
-            turma = disputas.get(0).getIdTurma(); // pega o primeiro elemento da lista
-            calculaVagas(turma, vagasTotais, vagasUem, vagasFora); // calcula o valor das vagas
-            ordenaMelhores(disputas, vagasFora, vagasUem, vagasTotais, turma);
+            turmaId = disputas.get(0).getIdTurma(); // pega o primeiro elemento da lista
+            turma = turmaRepository.findById(turmaId);
+            vagasTotais = turma.getNum_vagas();
+            aux = vagasTotais*0.8;
+            vagasUem = aux.intValue();
+            vagasFora = vagasTotais - vagasUem;
+            //disputas = disputaRepository.findAllByInscricaoAndAptoOrderByIdTurmaAscMediaDesc(inscricao_id, true);
+            ordenaMelhores(disputas, vagasFora, vagasUem, vagasTotais, turmaId);
         }catch (IndexOutOfBoundsException e){
             ra.addFlashAttribute("erro", "Erro ao realizar a seleção!");
+            erro = true;
         } finally {
+            if(!erro) {
+                inscricao.setFeita(true);
+                inscricaoRepository.saveAndFlush(inscricao);
+                ra.addFlashAttribute("sucesso", "Seleção realizada com sucesso!");
+            }
+
+
             return "redirect:/admin/habilitaInscricao";
         }
     }
@@ -86,12 +106,18 @@ public class SelecaoController {
             disputa_aux.setCpfIngressante(x.getCpf());
             disputa_aux.setNomeIngressante(usuario_aux.getNome() +" " + usuario_aux.getSobrenome());
 
-            if (x.isSit_entrega() && x.isSit_pagamento() && x.getMedia() > 7.0){
+            if (!x.isSit_entrega()){
+                disputa_aux.setApto(false);
+                disputa_aux.setMensagem("Documentos não entregues");
+            }  else if (!x.isSit_pagamento()) {
+                disputa_aux.setApto(false);
+                disputa_aux.setMensagem("Boleto não pago");
+            } else if(x.getMedia() < 7.0){
+                disputa_aux.setApto(false);
+                disputa_aux.setMensagem("Média abaixo de 7.0");
+            } else {
                 disputa_aux.setApto(true);
                 disputa_aux.setMensagem("Lista de Espera");
-            } else {
-                disputa_aux.setApto(false);
-                disputa_aux.setMensagem("Não apto");
             }
             disputaRepository.save(disputa_aux);
         }
@@ -101,18 +127,23 @@ public class SelecaoController {
                                 Integer vagasFora,
                                 Integer vagasUem,
                                 Integer vagasTotais,
-                                Integer turma){
+                                Integer turmaId){
         Integer cont1, cont2;
+        Turma turma;
         Ingressante ingre;
+        Double aux;
 
         cont1 = 1; //contador da vaga dos vinculados a uem
         cont2 = 1; //contador da vaga dos nao vinculados a uem
 
 
         for (Disputa disputa: disputas) {
-           if (!disputa.getIdTurma().equals(turma)){
-                turma = disputa.getIdTurma();
-                calculaVagas(turma, vagasTotais, vagasUem, vagasFora);
+           if (!disputa.getIdTurma().equals(turmaId)){
+                turma = turmaRepository.findById(disputa.getIdTurma());
+                vagasTotais = turma.getNum_vagas();
+                aux = vagasTotais*0.8;
+                vagasUem = aux.intValue();
+                vagasFora = vagasTotais - vagasUem;
                 cont1 = 1;
                 cont2 = 1;
            }
@@ -120,14 +151,14 @@ public class SelecaoController {
             if (isMembroUem(ingre.getId())){
                 if(cont1 <=  vagasUem){
                     disputa.setAprovado(true);
-                    disputa.setMensagem("Aprovado");
+                    disputa.setMensagem("Aprovado(Com Vínculo)");
                 }
                 disputa.setPosicao(cont1);
                 cont1 +=1;
             } else {
                 if(cont2 <= vagasFora){
                     disputa.setAprovado(true);
-                    disputa.setMensagem("Aprovado");
+                    disputa.setMensagem("Aprovado(Sem Vínculo)");
                 }
                 disputa.setPosicao(cont2);
                 cont2 +=1;
@@ -138,29 +169,9 @@ public class SelecaoController {
 
     }
 
-    private void calculaVagas(Integer turmaId, Integer vagas, Integer daUem, Integer foraUem){
-        Turma turma;
-        Double aux;
-
-        turma = turmaRepository.findById(turmaId);
-        vagas = turma.getNum_vagas();
-        aux = vagas*0.8;
-        daUem = aux.intValue();
-        foraUem = vagas - daUem;
-    }
 
     private boolean isMembroUem(Integer idIngressante){
         return (ingressanteRepository.findById(idIngressante).getPosUem() != PosicaoUEM.DESC_00);
     }
 
-    /*private Integer getInscricaoId(){
-        List<Inscricao> inscricoes = inscricaoRepository.findAll();
-
-        //Pega inscricao mais recente e retorna seu ID
-        if(inscricoes != null && !inscricoes.isEmpty()){
-            return inscricoes.get(inscricoes.size() -1).getInscricao_id();
-        } else {
-            return 0;
-        }
-    }*/
 }
