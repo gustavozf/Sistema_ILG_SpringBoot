@@ -30,18 +30,22 @@ public class HomeController {
     public String home(Model model){
         Calendario calendario = new Calendario();
         boolean ativo = false;
+        Inscricao ultima = null;
+        List<Inscricao> inscricoes = inscricaoRepository.findAllByAtiva(true);
 
-        List<Inscricao> inscricoes = inscricaoRepository.findAll();
-        Inscricao ultima = inscricoes.get(inscricoes.size()-1);
-
+        if (inscricoes.size() > 0) {
+            ultima = inscricoes.get(inscricoes.size() - 1);
+            if((ultima.getData_ini().compareTo(calendario.getDayMonthYear()) <= 0) && (ultima.getData_fim().compareTo(calendario.getDayMonthYear())> 0)) {
+                ativo = true;
+            }
+        }
+        
         //String inicio = ultima.getData_ini();
         //String fim = ultima.getData_fim();
         //String diahoje = calendario.getDayMonthYear();
 
         //<=0 se dataini for igual ou depois que hoje
-        if((calendario.getDayMonthYear().compareTo(ultima.getData_ini()) <= 0) && (ultima.getData_fim().compareTo(calendario.getDayMonthYear())> 0)) {
-            ativo = true;
-        }
+
 
         model.addAttribute("ativo", ativo);
 

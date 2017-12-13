@@ -12,7 +12,7 @@ public class Inscricao {
 
     //Exclusao logica
     @Column(name = "inscricao_ativo")
-    private boolean inscricaoAtiva = true;
+    private boolean ativa = true;
 
     @Column(name = "inscricao_data_inicio")
     private String data_ini;
@@ -47,11 +47,11 @@ public class Inscricao {
     }
 
     public boolean isInscricaoAtiva() {
-        return inscricaoAtiva;
+        return ativa;
     }
 
     public void setInscricaoAtiva(boolean inscricaoAtiva) {
-        this.inscricaoAtiva = inscricaoAtiva;
+        this.ativa = inscricaoAtiva;
     }
 
     public String getData_ini() {

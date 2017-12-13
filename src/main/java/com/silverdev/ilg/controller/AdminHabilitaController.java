@@ -39,7 +39,7 @@ public class AdminHabilitaController {
     @GetMapping
     public String habilacao(Model model){
 
-        List<Inscricao> inscricoes = inscricaoRepository.findAllByInscricaoAtiva(true);
+        List<Inscricao> inscricoes = inscricaoRepository.findAllByAtiva(true);
 
         model.addAttribute("inscricao", inscricoes);
 
