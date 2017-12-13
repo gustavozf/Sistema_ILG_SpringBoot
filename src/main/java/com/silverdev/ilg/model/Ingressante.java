@@ -47,6 +47,9 @@ public class Ingressante {
     @Column(name = "ingressante_sit_pagamento")
     private boolean sit_pagamento = false;
 
+    @Column(name = "ingressante_ativo")
+    private boolean ativo = true;
+
     @Column(name = "ingressante_inscricao")
     private Integer inscricao;
 
@@ -144,6 +147,14 @@ public class Ingressante {
 
     public void setInscricao(Integer inscricao) {
         this.inscricao = inscricao;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 
     @Override

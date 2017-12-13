@@ -2,6 +2,7 @@ package com.silverdev.ilg.controller;
 
 import com.silverdev.ilg.general.Calendario;
 import com.silverdev.ilg.model.Inscricao;
+import com.silverdev.ilg.model.Usuario;
 import com.silverdev.ilg.model.enums.Role;
 import com.silverdev.ilg.repository.InscricaoRepository;
 import com.silverdev.ilg.repository.UsuarioRepository;
@@ -59,19 +60,24 @@ public class HomeController {
         String acesso = auth.getAuthorities().toString();
         acesso = acesso.replace("[", "");
         acesso = acesso.replace("]","");
-        Integer id = usuarioRepository.findUsuarioByUsername(auth.getName()).getId();
-
+        Usuario user = usuarioRepository.findUsuarioByUsername(auth.getName());
+        Integer id = user.getId();
         String retorno = "";
-        if(acesso.equals(Role.ROLE_ADMIN.toString())){
-            retorno = "redirect:/admin";
-        } else if (acesso.equals(Role.ROLE_PROFESSOR.toString())){
-            retorno = "redirect:/professor/"+ id;
-        } else if (acesso.equals(Role.ROLE_ALUNO.toString())){
-            retorno = "redirect:/aluno/" + id;
-        } else if (acesso.equals(Role.ROLE_INGRESSANTE.toString())){
-            retorno = "redirect:/ingressante/"+ id;
-        } else if (acesso.equals(Role.ROLE_SECRETARIA.toString())){
-            retorno = "redirect:/funcionario/"+ id;
+
+        if(!user.isAtivo()){
+            retorno = "redirect:/";
+        } else {
+            if (acesso.equals(Role.ROLE_ADMIN.toString())) {
+                retorno = "redirect:/admin";
+            } else if (acesso.equals(Role.ROLE_PROFESSOR.toString())) {
+                retorno = "redirect:/professor/" + id;
+            } else if (acesso.equals(Role.ROLE_ALUNO.toString())) {
+                retorno = "redirect:/aluno/" + id;
+            } else if (acesso.equals(Role.ROLE_INGRESSANTE.toString())) {
+                retorno = "redirect:/ingressante/" + id;
+            } else if (acesso.equals(Role.ROLE_SECRETARIA.toString())) {
+                retorno = "redirect:/funcionario/" + id;
+            }
         }
 
         return retorno;

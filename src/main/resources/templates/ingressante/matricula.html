@@ -81,11 +81,19 @@
                             </div>
                             <td th:text="${disputa.mensagem}"></td>
                             <td>
-                                <div class="btn-group" role="group">
-                                    <a class="btn btn-danger btn-sm"
-                                       th:href="@{/state/desvincular/{id} (id=${disputa.idIngressante})}">Declinar</a>
-                                    <a type="button" class="btn btn-success btn-sm"
-                                       th:href="@{/state/matricular/{id} (id=${disputa.idIngressante})}">Matricular-se</a>
+                                <div th:if="${disputa.aprovado}">
+                                    <div class="btn-group" role="group">
+                                        <a class="btn btn-danger btn-sm"
+                                           th:href="@{/state/desvincular/{id} (id=${disputa.idIngressante})}">Declinar</a>
+                                        <a type="button" class="btn btn-success btn-sm"
+                                           th:href="@{/state/matricular/{id} (id=${disputa.idIngressante})}">Matricular-se</a>
+                                    </div>
+                                </div>
+                                <div th:unless="${disputa.aprovado}">
+                                    <div class="btn-group" role="group">
+                                        <a class="btn btn-danger btn-sm"
+                                           th:href="@{/state/desvincular/{id} (id=${disputa.idIngressante})}">Declinar</a>
+                                    </div>
                                 </div>
                             </td>
                         </tr>

@@ -8,7 +8,9 @@ import com.silverdev.ilg.model.Usuario;
 import com.silverdev.ilg.repository.UsuarioRepository;
 
 public interface Matricula {
-    public void desvincular(UsuarioRepository user, Integer id);
+    public void desvincular(UsuarioRepository user,
+                            IngressanteRepository ingressanteRepository,
+                            Integer id);
     public void viraAluno(Integer id,
                           IngressanteRepository ingressanteRepository,
                           UsuarioRepository usuarioRepository,
