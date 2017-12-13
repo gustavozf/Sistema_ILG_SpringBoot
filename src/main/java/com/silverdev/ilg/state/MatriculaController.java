@@ -1,4 +1,4 @@
-package com.silverdev.ilg.State;
+package com.silverdev.ilg.state;
 
 public class MatriculaController {
 }
