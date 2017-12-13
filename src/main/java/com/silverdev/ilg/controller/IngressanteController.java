@@ -3,17 +3,14 @@ package com.silverdev.ilg.controller;
 import com.silverdev.ilg.general.IngressoBoleto;
 import com.silverdev.ilg.model.Aluno;
 import com.silverdev.ilg.model.Ingressante;
+import com.silverdev.ilg.model.Turma;
 import com.silverdev.ilg.model.Usuario;
-import com.silverdev.ilg.repository.AlunoRepository;
-import com.silverdev.ilg.repository.IngressanteRepository;
-import com.silverdev.ilg.repository.UsuarioRepository;
+import com.silverdev.ilg.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -28,12 +25,18 @@ public class IngressanteController {
 
     private final IngressanteRepository ingressanteRepository;
     private final UsuarioRepository usuarioRepository;
+    private final TurmaRepository turmaRepository;
+    private final CursoRepository cursoRepository;
 
     @Autowired
     public IngressanteController(IngressanteRepository ingressanteRepository,
-                                 UsuarioRepository usuarioRepository){
+                                 UsuarioRepository usuarioRepository,
+                                 TurmaRepository turmaRepository,
+                                 CursoRepository cursoRepository){
         this.ingressanteRepository = ingressanteRepository;
         this.usuarioRepository = usuarioRepository;
+        this.turmaRepository = turmaRepository;
+        this.cursoRepository = cursoRepository;
     }
 
     @GetMapping
@@ -67,31 +70,39 @@ public class IngressanteController {
 
     @GetMapping("/registro/{id}")
     public String getRegistraFuncionario(@PathVariable("id") Integer id, Model model){
+        model.addAttribute("turmas", turmaRepository.findByDisponivel(true));
+        model.addAttribute("cursos", cursoRepository.findAll());
         model.addAttribute("ingressante", new Ingressante());
         Usuario user = usuarioRepository.findUsuarioById(id);
 
         return "/ingressante/registroCurso";
     }
 
-    @PostMapping("/registro/{id}")
-    public String registraFuncionario(@PathVariable("id") Integer id, @Valid Ingressante usuario, RedirectAttributes ra) {
+    //@PostMapping("/registro/{id}")
+    //@ResponseStatus(value= HttpStatus.OK)
+    @RequestMapping(value = "/registro/{id}", method = RequestMethod.POST)
+    public @ResponseBody String registraFuncionario(@PathVariable("id") Integer id, @Valid Ingressante usuario, RedirectAttributes ra) {
+        System.out.println("\nfalei cuzao");
         String redirecionamento = "redirect:/ingressante/{id}";
         Usuario user = usuarioRepository.findUsuarioById(id);
+        Ingressante ingressante = new Ingressante();
 
-        //Checa se existe o CPF no BD
-        boolean condicao1 = existeCpf(usuario.getCpf());
-        //Checa se existe um mesmo usuario inativo
-        boolean condicao2 = false;
-        if (condicao1){
-            condicao2 = usuarioRepository.getOneByCpf(usuario.getCpf()).isAtivo();
-        }
-
-        usuario.setId(user.getId());
         usuario.setCpf(user.getCpf());
-        usuario.setPosUem(user.getPosUEM());
-        if(condicao1 && !condicao2) {
-            ra.addFlashAttribute("sucesso", "Ingressante registrado com sucesso!");
-        }
+        usuario.setId(user.getId());
+        //boolean condicao1 = existeCpf(usuario.getCpf());
+        //Checa se existe um mesmo usuario inativo
+        //boolean condicao2 = false;
+        //if (condicao1){
+        //    condicao2 = usuarioRepository.getOneByCpf(usuario.getCpf()).isAtivo();
+        //}
+
+        //usuario.setId(user.getId());
+        //usuario.setCpf(user.getCpf());
+        //usuario.setPosUem(user.getPosUEM());
+        //if(condicao1 && !condicao2) {
+        //    ra.addFlashAttribute("sucesso", "Ingressante registrado com sucesso!");
+        //}
+        System.out.println("falei cuzao");
         return redirecionamento;
     }
 

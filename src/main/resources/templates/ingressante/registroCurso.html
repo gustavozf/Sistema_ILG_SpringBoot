@@ -35,67 +35,59 @@
 <br/>
 <br/>
 <br/>
-<div class="container">
-    <div class="row">
-        <div class="col-12 align-middle registro">
-            <div th:if="${error_cpf}">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <span th:text="${error_cpf}"></span>
-                </div>
-            </div>
-            <div th:if="${error_user}">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <span th:text="${error_user}"></span>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header text-center" style="background-color: #D3D3D3;">
-                    <b th:text="'Aqui voce pode se matricular em novo cursos no ILG!'"></b>
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title text-center">
-                    </h4>
-                    <form th:action="@{/ingressante/{id}/registro/{id} (id = ${ingressante.id})}" th:object="${ingressante}" method="post">
-                        <div class="form-row">
-                            <div class="form-group col-12 col-lg-6">
-                                <label for="nome_curso">Nome do Curso<span class="obrigatorio">*</span></label>
-                                <input class="form-control" type="text" th:field="*{nome_curso}" placeholder="ex: Espanhol " required="required"/>
-                            </div>
-                            <div class="form-group col-12 col-lg-6">
-                                <label for="turma">Turma<span class="obrigatorio">*</span></label>
-                                <input class="form-control" type="text" th:field="*{turma}" placeholder="ex: 19:00 " required="required"/>
-                            </div>
 
-                        </div>
-                        <div class="form-group">
-                            <button id="btn-subimit" style="float: right" type="submit" class="btn btn-primary">Cadastrar</button>
-                        </div>
-                    </form>
-                    <script>
-                        /* <![CDATA[ */
-                        $(document).ready(function () {
-                            $('#cpf').mask('000.000.000-00');
-                            $('#data_nascimento').mask('00/00/0000', {placeholder: "__/__/____"});
-                            $('#telefone').mask('(00) 0000-00000').keyup(function () {
-                                var size = $(this).val().length;
-                                if(size > 14)
-                                    $(this).mask('(00) 00000-0000')
-                            });
-                            $('#rg').mask('00.000.000-0');
-                            $('#cep').mask('00000-000');
-                        });
-                        /* ]]> */
-                    </script>
-                </div>
-            </div>
-        </div>
+
+<div class = "card" style="width: 80%; margin: auto;">
+    <div class="card-header text-center" style="background-color: #D3D3D3;">
+        <b>Turmas Disponiveis</b>
     </div>
+    <form th:action="@{/ingressante/{id}/registro/{id} (id = ${ingressante.id})}" th:object="${ingressante}" method="post">
+    <div class="card-body">
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#Id</th>
+                <th>Curso</th>
+                <th>Descrição</th>
+                <th>Professor</th>
+                <th>Nº Vagas</th>
+                <th>Preco</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="turmas: ${turmas}">
+                <td th:text="${turmas.id}"></td>
+                <div th:each="cursos: ${cursos}">
+                    <div th:if="${turmas.curso_id == cursos.id}">
+                        <td th:text="${cursos.nome}"></td>
+
+                        <td th:text="${turmas.dias} +' das '+ ${turmas.horarios}"></td>
+                        <td th:text="${turmas.professor}"></td>
+                        <td th:text="${turmas.num_vagas}"></td>
+                        <td th:text="${cursos.preco}"></td>
+                    </div>
+                </div>
+                <td>
+                    <div class="form-group">
+                        <button id="btn-subimit" style="float: right" type="submit" class="btn btn-primary">Inscrever</button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+            <div class="form-group col-12 col-lg-4">
+                <label class="col-form-label">Vinculo a UEM<span class="obrigatorio">*</span></label>
+                <select class="form-control" th:field="*{posUem}">
+                    <option th:each="pos : ${T(com.silverdev.ilg.model.enums.PosicaoUEM).values()}"
+                            th:value="${pos}"
+                            th:text="${pos.getPosicaoUem()}"></option>
+                </select>
+            </div>
+        </table>
+
+    </div>
+    </form>
 </div>
 
 <footer>
