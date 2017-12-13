@@ -38,4 +38,9 @@ public class AlunoState implements Matricula {
         alunoRepository.save(novoaluno);
 
     }
+
+    @Override
+    public void desvincular(UsuarioRepository user, Integer id) {
+        System.out.println("Ola");
+    }
 }
