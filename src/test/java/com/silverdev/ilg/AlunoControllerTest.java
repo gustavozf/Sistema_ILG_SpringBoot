@@ -19,36 +19,72 @@ public class AlunoControllerTest {
 
     @Test
     public void teste1() throws Exception {
-        List<Aluno> alunos = null;
-        controller.encontraAprovacao(alunos);
+        controller.encontraAprovacaoTeste(null);
 
     }
 
     @Test
     public void teste2() throws Exception {
-        List<Aluno> alunos = null;
+        //List<Aluno> alunos = null;
         Aluno aluno = new Aluno();
 
         aluno.setFaltas(26);
         aluno.setMedia(8.0);
 
-        alunos.add(aluno);
+        //alunos.add(aluno);
 
-        controller.encontraAprovacao(alunos);
-
+        controller.encontraAprovacaoTeste(aluno);
     }
 
     @Test
     public void teste3() throws Exception {
-        List<Aluno> alunos = null;
+        //List<Aluno> alunos = null;
         Aluno aluno = new Aluno();
 
         aluno.setFaltas(22);
         aluno.setMedia(9.4);
 
-        alunos.add(aluno);
+        //alunos.add(aluno);
 
-        controller.encontraAprovacao(alunos);
+        controller.encontraAprovacaoTeste(aluno);
+    }
 
+    @Test
+    public void teste4() throws Exception {
+        //List<Aluno> alunos = null;
+        Aluno aluno = new Aluno();
+
+        aluno.setFaltas(20);
+        aluno.setMedia(7.3);
+
+        //alunos.add(aluno);
+
+        controller.encontraAprovacaoTeste(aluno);
+    }
+
+    @Test
+    public void teste5() throws Exception {
+        //List<Aluno> alunos = null;
+        Aluno aluno = new Aluno();
+
+        aluno.setFaltas(2);
+        aluno.setMedia(6.8);
+
+        //alunos.add(aluno);
+
+        controller.encontraAprovacaoTeste(aluno);
+    }
+
+    @Test
+    public void teste6() throws Exception {
+        //List<Aluno> alunos = null;
+        Aluno aluno = new Aluno();
+
+        aluno.setFaltas(4);
+        aluno.setMedia(8.8);
+
+        //alunos.add(aluno);
+
+        controller.encontraAprovacaoTeste(aluno);
     }
 }
