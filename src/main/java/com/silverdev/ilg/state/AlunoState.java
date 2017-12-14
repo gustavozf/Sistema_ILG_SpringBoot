@@ -5,6 +5,7 @@ import com.silverdev.ilg.model.Ingressante;
 import com.silverdev.ilg.model.Usuario;
 import com.silverdev.ilg.model.enums.Role;
 import com.silverdev.ilg.repository.AlunoRepository;
+import com.silverdev.ilg.repository.DisputaRepository;
 import com.silverdev.ilg.repository.IngressanteRepository;
 import com.silverdev.ilg.repository.UsuarioRepository;
 
@@ -40,7 +41,11 @@ public class AlunoState implements Matricula {
     }
 
     @Override
-    public void desvincular(UsuarioRepository user, IngressanteRepository ingressanteRepository, Integer id) {
+    public void desvincular(UsuarioRepository user,
+                            IngressanteRepository ingressanteRepository,
+                            AlunoRepository alunoRepository,
+                            DisputaRepository disputaRepository,
+                            Integer id) {
         System.out.println("Ola");
     }
 }

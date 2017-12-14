@@ -63,7 +63,7 @@ public class IngressanteController {
         String cpf = user.getCpf();
         List<Ingressante> ingressante = ingressanteRepository.findByCpf(cpf);
         Integer numInscricao = ingressante.get(0).getInscricao();
-        List<Disputa> disputas =  disputaRepository.findAllByCpfIngressanteAndInscricao(cpf, numInscricao);
+        List<Disputa> disputas =  disputaRepository.findAllByCpfIngressanteAndInscricaoAndMatriculado(cpf, numInscricao, false);
         Inscricao inscricao = inscricaoRepository.getOne(numInscricao);
         boolean selecaoFeita = false;
 
