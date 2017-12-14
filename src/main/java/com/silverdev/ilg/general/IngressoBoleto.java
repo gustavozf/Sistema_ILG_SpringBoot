@@ -66,16 +66,16 @@ public class IngressoBoleto {
                 /*
                  * INFORMANDO DADOS SOBRE O SACADOR AVALISTA.
                  */
-        SacadorAvalista sacadorAvalista = new SacadorAvalista("JRimum Enterprise", "00.000.000/0001-91");
+        SacadorAvalista sacadorAvalista = new SacadorAvalista("Universidade Estadual de Maringá", "00.000.000/0001-91");
 
         // Informando o endereço do sacador avalista.
         Endereco enderecoSacAval = new Endereco();
-        enderecoSacAval.setUF(UnidadeFederativa.DF);
-        enderecoSacAval.setLocalidade("Brasília");
-        enderecoSacAval.setCep(new CEP("59000-000"));
-        enderecoSacAval.setBairro("Grande Centro");
-        enderecoSacAval.setLogradouro("Rua Eternamente Principal");
-        enderecoSacAval.setNumero("001");
+        enderecoSacAval.setUF(UnidadeFederativa.PR);
+        enderecoSacAval.setLocalidade("Maringá");
+        enderecoSacAval.setCep(new CEP("87020-900"));
+        enderecoSacAval.setBairro("Zona 7");
+        enderecoSacAval.setLogradouro("Av Colombo");
+        enderecoSacAval.setNumero("5790");
         sacadorAvalista.addEndereco(enderecoSacAval);
 
                 /*
@@ -84,7 +84,7 @@ public class IngressoBoleto {
 
         // Informando dados sobre a conta bancária do título.
         ContaBancaria contaBancaria = new ContaBancaria(BancosSuportados.BANCO_BRADESCO.create());
-        contaBancaria.setNumeroDaConta(new NumeroDaConta(123456, "0"));
+        contaBancaria.setNumeroDaConta(new NumeroDaConta(3178, "0"));
         contaBancaria.setCarteira(new Carteira(30));
         contaBancaria.setAgencia(new Agencia(3178, "0"));
 
@@ -92,7 +92,7 @@ public class IngressoBoleto {
         titulo.setNumeroDoDocumento("123456");
         titulo.setNossoNumero("99345678912");
         titulo.setDigitoDoNossoNumero("5");
-        titulo.setValor(BigDecimal.valueOf(0.23));
+        titulo.setValor(BigDecimal.valueOf(12.90));
         titulo.setDataDoDocumento(new Date());
         titulo.setDataDoVencimento(new Date());
         titulo.setTipoDeDocumento(TipoDeTitulo.DM_DUPLICATA_MERCANTIL);
@@ -108,11 +108,11 @@ public class IngressoBoleto {
                  */
         Boleto boleto = new Boleto(titulo);
 
-        boleto.setLocalPagamento("Pagável preferencialmente na Rede X ou em " +
-                "qualquer Banco até o Vencimento.");
-        boleto.setInstrucaoAoSacado("Senhor sacado, sabemos sim que o valor " +
-                "cobrado não é o esperado, aproveite o DESCONTÃO!");
-        boleto.setInstrucao1("APÓS o Vencimento, Pagável Somente na Rede X.");
+        boleto.setLocalPagamento("Pagável preferencialmente no banco do Bradesco ou em" +
+                "qualquer casa lotérica até o vencimento.");
+       // boleto.setInstrucaoAoSacado("Senhor sacado, sabemos sim que o valor " +
+         //       "cobrado não é o esperado, aproveite o DESCONTÃO!");
+        boleto.setInstrucao1("APÓS o Vencimento, Pagável Somente no Banco Bradesco.");
 
                 /*
                  * GERANDO O BOLETO BANCÁRIO.

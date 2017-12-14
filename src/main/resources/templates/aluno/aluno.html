@@ -29,6 +29,12 @@
     </div>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
+        <a class="btn btn-primary" onclick="swal(
+                                                          'Precisa de Ajuda?',
+                                                          'Aqui você aluno pode verificar as notas assim como a aprovação ou não nos cursos matriculados! ' +
+                                                           'Para isso, basta acessar as abas presentes no menu.',
+                                                          'question'
+                                                        )"> Ajuda </a>
         <li class="nav-item">
           <a class="btn btn-primary" th:href="@{/logout}"> Sair </a>
         </li>
