@@ -71,12 +71,25 @@ public class AlunoController {
     }
 
     public void encontraAprovacao(List<Aluno> alunos){
-        for(Aluno x: alunos){
-            if((x.getMedia()) >= verificaFaltas(x.getFaltas())){
-                x.setAprovacao(true);
-                alunoRepository.saveAndFlush(x);
+        if(alunos != null) {
+            for (Aluno x : alunos) {
+                if ((x.getMedia()) >= verificaFaltas(x.getFaltas())) {
+                    x.setAprovacao(true);
+                    alunoRepository.saveAndFlush(x);
+                } else {
+                    x.setAprovacao(false);
+                }
+            }
+        }
+    }
+
+    public void encontraAprovacaoTeste(Aluno aluno){
+        if(aluno != null) {
+            if((aluno.getMedia()) >= verificaFaltas(aluno.getFaltas())){
+                aluno.setAprovacao(true);
+                alunoRepository.saveAndFlush(aluno);
             }else{
-                x.setAprovacao(false);
+                aluno.setAprovacao(false);
             }
         }
     }

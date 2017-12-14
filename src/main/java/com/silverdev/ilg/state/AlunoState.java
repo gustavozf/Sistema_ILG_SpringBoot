@@ -17,6 +17,7 @@ public class AlunoState implements Matricula {
                           DisputaRepository disputaRepository,
                           UsuarioRepository usuarioRepository,
                           AlunoRepository alunoRepository) {
+
         Ingressante ingressante = ingressanteRepository.findById(id);
         Usuario usuario = usuarioRepository.findUsuarioByCpf(ingressante.getCpf());
         Disputa disputa = disputaRepository.findByIdIngressante(id);
