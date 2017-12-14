@@ -39,9 +39,7 @@ public class SelecaoController {
     @GetMapping("/visualizacao/{id}")
     public String visualizaSelecao(@PathVariable("id") Integer inscricao_id, Model model){
         List<Disputa> alunosGerais = disputaRepository
-                .findAllByInscricaoOrderByNomeIngressante(inscricao_id);
-        List<Disputa> alunosFora = null;
-        List<Disputa> naoAptos = disputaRepository.findByAptoOrderByNomeIngressante(false);
+                .findAllByInscricaoOrderByNomeIngressante(inscricao_id); // Pega todos os alunos de um periodo de inscricao
 
         model.addAttribute("disputas", alunosGerais);
 
@@ -64,9 +62,10 @@ public class SelecaoController {
 
 
         try {
+            // Seleciona todos os inscritos, os separando por turma e deixando os com a maior nota acima
             disputas = disputaRepository.findAllByInscricaoAndAptoOrderByIdTurmaAscMediaDesc(inscricao_id, true);
             turmaId = disputas.get(0).getIdTurma(); // pega o primeiro elemento da lista
-            turma = turmaRepository.findById(turmaId);
+            turma = turmaRepository.findById(turmaId); // Pega a primeira turma
             vagasTotais = turma.getNum_vagas();
             aux = vagasTotais*0.8;
             vagasUem = aux.intValue();
@@ -96,6 +95,7 @@ public class SelecaoController {
             disputa_aux = new Disputa();
             usuario_aux =  usuarioRepository.getOneByCpf(x.getCpf());
 
+            // Pega as informacoes do ingressante e escreve na disputa
             disputa_aux.setIdIngressante(x.getId());
             disputa_aux.setIdCurso(x.getCod_curso());
             disputa_aux.setIdTurma(x.getTurma());
@@ -106,6 +106,7 @@ public class SelecaoController {
             disputa_aux.setCpfIngressante(x.getCpf());
             disputa_aux.setNomeIngressante(usuario_aux.getNome() +" " + usuario_aux.getSobrenome());
 
+            // Separa os aptos dos nao aptos e insere uma mensagem de status inicial
             if (!x.isSit_entrega()){
                 disputa_aux.setApto(false);
                 disputa_aux.setMensagem("Documentos não entregues");
@@ -119,7 +120,7 @@ public class SelecaoController {
                 disputa_aux.setApto(true);
                 disputa_aux.setMensagem("Lista de Espera");
             }
-            disputaRepository.save(disputa_aux);
+            disputaRepository.save(disputa_aux); // salva no BD a nova disputa
         }
     }
 
@@ -138,7 +139,8 @@ public class SelecaoController {
 
 
         for (Disputa disputa: disputas) {
-           if (!disputa.getIdTurma().equals(turmaId)){
+           if (!disputa.getIdTurma().equals(turmaId)){ // Se mudar de turma
+               // Pega os novos dados da turma e recalcula o numero de vagas
                 turma = turmaRepository.findById(disputa.getIdTurma());
                 vagasTotais = turma.getNum_vagas();
                 aux = vagasTotais*0.8;
@@ -147,15 +149,16 @@ public class SelecaoController {
                 cont1 = 1;
                 cont2 = 1;
            }
+            // Pega um ingressante de acordo com sua disputa
             ingre = ingressanteRepository.getOne(disputa.getIdIngressante());
-            if (isMembroUem(ingre.getId())){
+            if (isMembroUem(ingre)){ // Se ele possuir vinculo com a UEM
                 if(cont1 <=  vagasUem){
                     disputa.setAprovado(true);
                     disputa.setMensagem("Aprovado(Com Vínculo)");
                 }
                 disputa.setPosicao(cont1);
                 cont1 +=1;
-            } else {
+            } else { // Caso contrario
                 if(cont2 <= vagasFora){
                     disputa.setAprovado(true);
                     disputa.setMensagem("Aprovado(Sem Vínculo)");
@@ -163,15 +166,16 @@ public class SelecaoController {
                 disputa.setPosicao(cont2);
                 cont2 +=1;
             }
-            disputaRepository.saveAndFlush(disputa);
+            disputaRepository.saveAndFlush(disputa); // Salva no BD
         }
 
 
     }
 
 
-    private boolean isMembroUem(Integer idIngressante){
-        return (ingressanteRepository.findById(idIngressante).getPosUem() != PosicaoUEM.DESC_00);
+    private boolean isMembroUem(Ingressante ingressante){ // Verifica se o ingressante possui vinculo com a UEM
+        //return (ingressanteRepository.findById(idIngressante).getPosUem() != PosicaoUEM.DESC_00);
+        return (ingressante.getPosUem() != PosicaoUEM.DESC_00);
     }
 
 }

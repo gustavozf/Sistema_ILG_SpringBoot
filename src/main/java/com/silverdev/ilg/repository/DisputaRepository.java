@@ -12,4 +12,5 @@ public interface DisputaRepository extends JpaRepository<Disputa,Integer> {
     List<Disputa> findByAptoOrderByNomeIngressante(boolean apto);
     List<Disputa> findAllByInscricaoOrderByNomeIngressante(Integer inscricao);
     List<Disputa> findAllByCpfIngressanteAndInscricaoAndMatriculado(String cpf, Integer inscricao, boolean matriculado);
+    Disputa findByIdIngressante(Integer id);
 }

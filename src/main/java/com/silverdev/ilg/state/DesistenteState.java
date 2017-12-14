@@ -23,7 +23,7 @@ public class DesistenteState implements Matricula {
         Integer tamListaIngre = ir.findByCpfAndInscricaoAndAtivo(cpf, ingressante.getInscricao(), true).size(); // Verifica a quantidade cursos que é candidato
         Integer tamListaAlun = ar.findByCpf(cpf).size(); // Verifica a quantidade de cursos que é inscrito
         Usuario usuario = user.findUsuarioByCpf(cpf); // Pega o objeto usuario do mesmo
-        Disputa disputa = dr.getOne(ingressante.getId()); // pega a disputa pela vaga do ingressante
+        Disputa disputa = dr.findByIdIngressante(ingressante.getId()); // pega a disputa pela vaga do ingressante
         boolean userDeleted = false;
 
         disputa.setMatriculado(true); // muda pra true para que nao aparece no menu do ingressante
