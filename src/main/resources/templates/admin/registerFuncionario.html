@@ -68,11 +68,11 @@
                             <div class="form-row">
                                 <div class="form-group col-12 col-lg-6">
                                     <label for="nome">Nome<span class="obrigatorio">*</span></label>
-                                    <input class="form-control" type="text" th:field="*{nome}" placeholder="Insira seu Nome " required="required"/>
+                                    <input class="form-control" type="text" pattern="[A-Za-z]{*}" th:field="*{nome}" placeholder="Insira seu Nome " required="required"/>
                                 </div>
                                 <div class="form-group col-12 col-lg-6">
                                     <label for="sobrenome">Sobrenome<span class="obrigatorio">*</span></label>
-                                    <input class="form-control" type="text" th:field="*{sobrenome}" placeholder="Insira seu Sobrenome " required="required"/>
+                                    <input class="form-control" type="text" pattern="[A-Za-z]{*}" th:field="*{sobrenome}" placeholder="Insira seu Sobrenome " required="required"/>
                                 </div>
                                 <div class="form-group col-12 col-lg-6">
                                     <label>Sexo<span class="obrigatorio">*</span></label><br/>

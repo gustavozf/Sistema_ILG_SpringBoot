@@ -35,14 +35,19 @@ public class MatriculaController {
     @GetMapping("/matricular/{id}")
     public String matricularSe(@PathVariable("id") Integer id){
         matricula = new AlunoState();
+        Usuario usuario = usuarioRepository.findUsuarioByCpf(ingressanteRepository.getOne(id).getCpf());
+        String redirect = "redirect:/ingressante/"+usuario.getId()+"/matricula/"+usuario.getId();
+        boolean retorno;
 
-        matricula.viraAluno(id,
+        retorno = matricula.viraAluno(id,
                             ingressanteRepository,
+                            disputaRepository,
                             usuarioRepository,
-                            alunoRepository
-                            );
+                            alunoRepository);
 
-        return "redirect:/login";
+        if(retorno){redirect = "redirect:/login";}
+
+        return redirect;
     }
 
     @GetMapping("/desvincular/{id}")
@@ -56,7 +61,7 @@ public class MatriculaController {
                 .desvincular(usuarioRepository, ingressanteRepository, alunoRepository, disputaRepository, id);
 
         if(retorno) {
-            caminhoRetorno = "redirect:/";
+            caminhoRetorno = "redirect:/login";
         }
 
         return caminhoRetorno;

@@ -60,7 +60,7 @@
                         <div class="form-row">
                             <div class="form-group col-12 col-lg-6">
                                 <label for="nome">Nome<span class="obrigatorio">*</span></label>
-                                <input class="form-control" type="text" th:field="*{nome}" placeholder="Insira o nome do Curso" required="required"/>
+                                <input class="form-control" type="text" pattern="[A-Za-z]{*}" th:field="*{nome}" placeholder="Insira o nome do Curso" required="required"/>
                             </div>
                             <div class="form-group col-12 col-lg-6">
                                 <label for="carga_horaria">Carga Horária<span class="obrigatorio">*</span></label>

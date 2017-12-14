@@ -11,7 +11,7 @@ public interface Matricula {
                             AlunoRepository alunoRepository,
                             DisputaRepository disputaRepository,
                             Integer id);
-    public void viraAluno(Integer id,
+    public boolean viraAluno(Integer id,
                           IngressanteRepository ingressanteRepository,
                           DisputaRepository disputaRepository,
                           UsuarioRepository usuarioRepository,

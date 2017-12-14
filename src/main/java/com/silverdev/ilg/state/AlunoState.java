@@ -12,17 +12,19 @@ import com.silverdev.ilg.repository.UsuarioRepository;
 
 public class AlunoState implements Matricula {
     @Override
-    public void viraAluno(Integer id,
+    public boolean viraAluno(Integer id,
                           IngressanteRepository ingressanteRepository,
                           DisputaRepository disputaRepository,
                           UsuarioRepository usuarioRepository,
                           AlunoRepository alunoRepository) {
         Ingressante ingressante = ingressanteRepository.findById(id);
-        Usuario usuario = usuarioRepository.findUsuarioById(id);
+        Usuario usuario = usuarioRepository.findUsuarioByCpf(ingressante.getCpf());
         Disputa disputa = disputaRepository.findByIdIngressante(id);
         String cpf = ingressante.getCpf();
+        boolean retorno = false;
 
         disputa.setMatriculado(true);
+        ingressante.setAtivo(false);
 
         Aluno novoaluno = new Aluno();
 
@@ -42,19 +44,24 @@ public class AlunoState implements Matricula {
         Integer tamListaIngre = ingressanteRepository.findByCpfAndInscricaoAndAtivo(cpf, ingressante.getInscricao(), true).size();
         if( tamListaIngre == 1){
             usuario.setAcesso(Role.ROLE_ALUNO);
+            retorno = true;
         }
 
         usuarioRepository.saveAndFlush(usuario);
         alunoRepository.save(novoaluno);
+        disputaRepository.saveAndFlush(disputa);
+        ingressanteRepository.saveAndFlush(ingressante);
+
+        return retorno;
 
     }
 
     @Override
     public boolean desvincular(UsuarioRepository user,
-                            IngressanteRepository ingressanteRepository,
-                            AlunoRepository alunoRepository,
-                            DisputaRepository disputaRepository,
-                            Integer id) {
+                               IngressanteRepository ir,
+                               AlunoRepository ar,
+                               DisputaRepository dr,
+                               Integer id){
         return true;
     }
 }

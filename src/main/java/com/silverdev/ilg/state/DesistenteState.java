@@ -3,6 +3,7 @@ package com.silverdev.ilg.state;
 import com.silverdev.ilg.model.Disputa;
 import com.silverdev.ilg.model.Ingressante;
 import com.silverdev.ilg.model.Usuario;
+import com.silverdev.ilg.model.enums.Role;
 import com.silverdev.ilg.repository.AlunoRepository;
 import com.silverdev.ilg.repository.DisputaRepository;
 import com.silverdev.ilg.repository.IngressanteRepository;
@@ -23,7 +24,7 @@ public class DesistenteState implements Matricula {
         Integer tamListaIngre = ir.findByCpfAndInscricaoAndAtivo(cpf, ingressante.getInscricao(), true).size(); // Verifica a quantidade cursos que é candidato
         Integer tamListaAlun = ar.findByCpf(cpf).size(); // Verifica a quantidade de cursos que é inscrito
         Usuario usuario = user.findUsuarioByCpf(cpf); // Pega o objeto usuario do mesmo
-        Disputa disputa = dr.findByIdIngressante(ingressante.getId()); // pega a disputa pela vaga do ingressante
+        Disputa disputa = dr.findByIdIngressante(id); // pega a disputa pela vaga do ingressante
         boolean userDeleted = false;
 
         disputa.setMatriculado(true); // muda pra true para que nao aparece no menu do ingressante
@@ -36,6 +37,9 @@ public class DesistenteState implements Matricula {
             if ((tamListaAlun == 0)){ // e nao esta inscrito em nenhum curso
                 usuario.setAtivo(false); // Retira o usario
                 user.saveAndFlush(usuario);
+            } else {
+                usuario.setAcesso(Role.ROLE_ALUNO);
+                user.saveAndFlush(usuario);
             }
         }
 
@@ -43,7 +47,11 @@ public class DesistenteState implements Matricula {
     }
 
     @Override
-    public void viraAluno(Integer id, IngressanteRepository ir, UsuarioRepository usuarioRepository, AlunoRepository alunoRepository) {
-        //System.out.println("Ola");
+    public boolean viraAluno(Integer id,
+                          IngressanteRepository ingressanteRepository,
+                          DisputaRepository disputaRepository,
+                          UsuarioRepository usuarioRepository,
+                          AlunoRepository alunoRepository){
+        return true;
     }
 }

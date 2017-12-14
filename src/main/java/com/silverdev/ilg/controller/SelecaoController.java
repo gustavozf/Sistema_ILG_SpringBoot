@@ -70,7 +70,7 @@ public class SelecaoController {
             aux = vagasTotais*0.8;
             vagasUem = aux.intValue();
             vagasFora = vagasTotais - vagasUem;
-            //disputas = disputaRepository.findAllByInscricaoAndAptoOrderByIdTurmaAscMediaDesc(inscricao_id, true);
+            disputas = disputaRepository.findAllByInscricaoAndAptoOrderByIdTurmaAscMediaDesc(inscricao_id, true);
             ordenaMelhores(disputas, vagasFora, vagasUem, vagasTotais, turmaId);
         }catch (IndexOutOfBoundsException e){
             ra.addFlashAttribute("erro", "Erro ao realizar a seleção!");
@@ -117,8 +117,13 @@ public class SelecaoController {
                 disputa_aux.setApto(false);
                 disputa_aux.setMensagem("Média abaixo de 7.0");
             } else {
-                disputa_aux.setApto(true);
-                disputa_aux.setMensagem("Lista de Espera");
+                if(isMembroUem(x)){
+                    disputa_aux.setApto(true);
+                    disputa_aux.setMensagem("Lista de Espera (Com Vínculo)");
+                } else{
+                    disputa_aux.setApto(true);
+                    disputa_aux.setMensagem("Lista de Espera (Sem Vínculo)");
+                }
             }
             disputaRepository.save(disputa_aux); // salva no BD a nova disputa
         }
