@@ -20,7 +20,7 @@ public class DesistenteState implements Matricula {
                             Integer id){
         Ingressante ingressante = ir.getOne(id); //Acha um objeto ingressante com o ID
         String cpf = ingressante.getCpf(); // Pega o CPF do mesmo
-        Integer tamListaIngre = ir.findByCpf(cpf).size(); // Verifica a quantidade cursos que é candidato
+        Integer tamListaIngre = ir.findByCpfAndInscricaoAndAtivo(cpf, ingressante.getInscricao(), true).size(); // Verifica a quantidade cursos que é candidato
         Integer tamListaAlun = ar.findByCpf(cpf).size(); // Verifica a quantidade de cursos que é inscrito
         Usuario usuario = user.findUsuarioByCpf(cpf); // Pega o objeto usuario do mesmo
         Disputa disputa = dr.getOne(ingressante.getId()); // pega a disputa pela vaga do ingressante
@@ -30,11 +30,13 @@ public class DesistenteState implements Matricula {
         dr.saveAndFlush(disputa);
         ingressante.setAtivo(false); // Retira do curso X ao qual eh candidato
         ir.saveAndFlush(ingressante);
-        // Se for o ultimo curso que eh candidato e nao esta inscrito em nenhum curso
-        if((tamListaIngre == 1) && (tamListaAlun == 0)){
-            usuario.setAtivo(false); // Retira o usario
-            user.saveAndFlush(usuario);
+        // Se for o ultimo curso que eh candidato
+        if((tamListaIngre == 1)){
             userDeleted = true;
+            if ((tamListaAlun == 0)){ // e nao esta inscrito em nenhum curso
+                usuario.setAtivo(false); // Retira o usario
+                user.saveAndFlush(usuario);
+            }
         }
 
         return userDeleted;

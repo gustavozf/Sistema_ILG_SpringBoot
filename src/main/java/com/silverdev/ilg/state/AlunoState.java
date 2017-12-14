@@ -41,11 +41,11 @@ public class AlunoState implements Matricula {
     }
 
     @Override
-    public void desvincular(UsuarioRepository user,
+    public boolean desvincular(UsuarioRepository user,
                             IngressanteRepository ingressanteRepository,
                             AlunoRepository alunoRepository,
                             DisputaRepository disputaRepository,
                             Integer id) {
-        System.out.println("Ola");
+        return true;
     }
 }

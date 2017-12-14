@@ -11,4 +11,5 @@ public interface IngressanteRepository extends JpaRepository<Ingressante,Integer
     List<Ingressante> findAllByInscricao(Integer inscricao);
     Ingressante findById(Integer id);
     List<Ingressante> findAllByInscricaoOrderByTurmaAscMediaDesc(Integer inscricao);
+    List<Ingressante> findByCpfAndInscricaoAndAtivo(String cpf, Integer inscricao, boolean ativo);
 }

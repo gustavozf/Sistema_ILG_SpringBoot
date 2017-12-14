@@ -65,7 +65,7 @@ public class HomeController {
         String retorno = "";
 
         if(!user.isAtivo()){
-            retorno = "redirect:/";
+            retorno = "redirect:/login?error";
         } else {
             if (acesso.equals(Role.ROLE_ADMIN.toString())) {
                 retorno = "redirect:/admin";

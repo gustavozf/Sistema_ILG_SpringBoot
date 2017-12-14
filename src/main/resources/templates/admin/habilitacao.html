@@ -137,7 +137,9 @@
                 <td>
                     <div th:switch="${inscricao.feita}">
                         <div class="btn-group" role="group">
-                            <a th:case="false" class="btn btn-primary btn-sm"
+                            <a th:case="false" class="btn btn-primary btn-sm" onclick="swal('Realizando Seleção!',
+                                                                                        'Isto pode levar um tempo...',
+                                                                                        'info')"
                                th:href="@{/admin/selecao/{id} (id=${inscricao.id})}">Selecionar</a>
                             <a th:case="true" class="btn btn-primary btn-sm disabled"
                                th:href="@{/admin/selecao/{id} (id=${inscricao.id})}">Selecionar</a>
