@@ -1,6 +1,7 @@
 package com.silverdev.ilg.state;
 
 import com.silverdev.ilg.model.Aluno;
+import com.silverdev.ilg.model.Disputa;
 import com.silverdev.ilg.model.Ingressante;
 import com.silverdev.ilg.model.Usuario;
 import com.silverdev.ilg.model.enums.Role;
@@ -13,10 +14,15 @@ public class AlunoState implements Matricula {
     @Override
     public void viraAluno(Integer id,
                           IngressanteRepository ingressanteRepository,
+                          DisputaRepository disputaRepository,
                           UsuarioRepository usuarioRepository,
                           AlunoRepository alunoRepository) {
         Ingressante ingressante = ingressanteRepository.findById(id);
         Usuario usuario = usuarioRepository.findUsuarioById(id);
+        Disputa disputa = disputaRepository.findByIdIngressante(id);
+        String cpf = ingressante.getCpf();
+
+        disputa.setMatriculado(true);
 
         Aluno novoaluno = new Aluno();
 
@@ -33,7 +39,10 @@ public class AlunoState implements Matricula {
         novoaluno.setMedia(0.0);
         novoaluno.setFaltas(0);
 
-        usuario.setAcesso(Role.ROLE_ALUNO);
+        Integer tamListaIngre = ingressanteRepository.findByCpfAndInscricaoAndAtivo(cpf, ingressante.getInscricao(), true).size();
+        if( tamListaIngre == 1){
+            usuario.setAcesso(Role.ROLE_ALUNO);
+        }
 
         usuarioRepository.saveAndFlush(usuario);
         alunoRepository.save(novoaluno);

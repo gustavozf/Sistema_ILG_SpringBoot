@@ -13,6 +13,7 @@ public interface Matricula {
                             Integer id);
     public void viraAluno(Integer id,
                           IngressanteRepository ingressanteRepository,
+                          DisputaRepository disputaRepository,
                           UsuarioRepository usuarioRepository,
                           AlunoRepository alunoRepository);
 }
