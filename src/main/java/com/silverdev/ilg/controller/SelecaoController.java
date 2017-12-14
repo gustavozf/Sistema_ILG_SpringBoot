@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/admin/selecao/")
@@ -70,8 +71,9 @@ public class SelecaoController {
             aux = vagasTotais*0.8;
             vagasUem = aux.intValue();
             vagasFora = vagasTotais - vagasUem;
-            disputas = disputaRepository.findAllByInscricaoAndAptoOrderByIdTurmaAscMediaDesc(inscricao_id, true);
+            //disputas = disputaRepository.findAllByInscricaoAndAptoOrderByIdTurmaAscMediaDesc(inscricao_id, true);
             ordenaMelhores(disputas, vagasFora, vagasUem, vagasTotais, turmaId);
+            setTurmasIndisponiveis();
         }catch (IndexOutOfBoundsException e){
             ra.addFlashAttribute("erro", "Erro ao realizar a seleção!");
             erro = true;
@@ -134,20 +136,20 @@ public class SelecaoController {
                                 Integer vagasUem,
                                 Integer vagasTotais,
                                 Integer turmaId){
-        Integer cont1, cont2;
-        Turma turma;
+        Integer cont1, cont2, turma;
         Ingressante ingre;
         Double aux;
 
+        turma = turmaId;
         cont1 = 1; //contador da vaga dos vinculados a uem
         cont2 = 1; //contador da vaga dos nao vinculados a uem
 
 
         for (Disputa disputa: disputas) {
-           if (!disputa.getIdTurma().equals(turmaId)){ // Se mudar de turma
+           if (!Objects.equals(disputa.getIdTurma(), turma)){ // Se mudar de turma
                // Pega os novos dados da turma e recalcula o numero de vagas
-                turma = turmaRepository.findById(disputa.getIdTurma());
-                vagasTotais = turma.getNum_vagas();
+                vagasTotais = turmaRepository.findById(disputa.getIdTurma()).getNum_vagas();
+                turma = disputa.getIdTurma();
                 aux = vagasTotais*0.8;
                 vagasUem = aux.intValue();
                 vagasFora = vagasTotais - vagasUem;
@@ -159,14 +161,14 @@ public class SelecaoController {
             if (isMembroUem(ingre)){ // Se ele possuir vinculo com a UEM
                 if(cont1 <=  vagasUem){
                     disputa.setAprovado(true);
-                    disputa.setMensagem("Aprovado(Com Vínculo)");
+                    disputa.setMensagem("Aprovado (Com Vínculo)");
                 }
                 disputa.setPosicao(cont1);
                 cont1 +=1;
             } else { // Caso contrario
                 if(cont2 <= vagasFora){
                     disputa.setAprovado(true);
-                    disputa.setMensagem("Aprovado(Sem Vínculo)");
+                    disputa.setMensagem("Aprovado (Sem Vínculo)");
                 }
                 disputa.setPosicao(cont2);
                 cont2 +=1;
@@ -177,10 +179,15 @@ public class SelecaoController {
 
     }
 
+    private void setTurmasIndisponiveis(){
+        for(Turma x : turmaRepository.findByAtivoAndDisponivel(true, true)){
+            x.setDisponivel(false);
+            turmaRepository.saveAndFlush(x);
+        }
+    }
 
     private boolean isMembroUem(Ingressante ingressante){ // Verifica se o ingressante possui vinculo com a UEM
         //return (ingressanteRepository.findById(idIngressante).getPosUem() != PosicaoUEM.DESC_00);
         return (ingressante.getPosUem() != PosicaoUEM.DESC_00);
     }
-
 }

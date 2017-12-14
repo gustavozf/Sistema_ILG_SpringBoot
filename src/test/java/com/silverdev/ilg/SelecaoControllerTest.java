@@ -7,6 +7,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import java.util.List;
 
@@ -18,42 +20,19 @@ public class SelecaoControllerTest {
 
     @Test
     public void caminho1() throws Exception{
-        List<Disputa> disputas = null;
-
-
-        //controller.ordenaMelhores(disputas,1,1,1,1);
+        controller.realizaSelecao(1,new RedirectAttributesModelMap());
     }
 
     @Test
     public void caminho2() throws Exception{
-        List<Disputa> disputas = null;
-
-
-        //controller.ordenaMelhores(disputas, 1,1,1,1);
+        // deve passar pois trata-se a excessao
+        controller.realizaSelecao(16,new RedirectAttributesModelMap());
     }
 
     @Test
     public void caminho3() throws Exception{
-        List<Disputa> disputas = null;
-
-
-        //controller.ordenaMelhores(disputas, 1, 0, 1,1);
+        controller.visualizaSelecao(1,new RedirectAttributesModelMap());
     }
 
-    @Test
-    public void caminho4() throws Exception{
-        List<Disputa> disputas = null;
-
-
-       // controller.ordenaMelhores(disputas, );
-    }
-
-    @Test
-    public void caminho5() throws Exception{
-        List<Disputa> disputas = null;
-
-
-        //controller.ordenaMelhores();
-    }
 
 }
